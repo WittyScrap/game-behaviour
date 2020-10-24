@@ -21,6 +21,11 @@ void APlanet::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	this->DynamicAtmosphere = UMaterialInstanceDynamic::Create(this->AtmosphereMaterial, this);
+	this->DynamicPlanet = UMaterialInstanceDynamic::Create(this->PlanetMaterial, this); 
+
+	this->Atmosphere->SetMaterial(0, this->DynamicAtmosphere);
+	this->Planet->SetMaterial(0, this->DynamicPlanet);
 }
 
 // Called every frame
@@ -28,6 +33,13 @@ void APlanet::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	FVector lightDir = this->Sun->GetActorLocation() - this->GetActorLocation();
+
+	this->DynamicAtmosphere->SetVectorParameterValue("Light Direction", lightDir);
+	this->DynamicPlanet->SetVectorParameterValue("Light Direction", lightDir);
+
+	FRotator rot(0, this->RotationSpeed * DeltaTime, 0);
+	this->AddActorLocalRotation(rot, false, NULL, ETeleportType::None);
 }
 
 // Updates shader data 

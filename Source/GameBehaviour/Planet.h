@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Components/StaticMeshComponent.h"
 #include "Materials/MaterialInstance.h"
+#include "Materials/MaterialInstanceDynamic.h"
 
 #include "Planet.generated.h"
 
@@ -15,6 +16,22 @@ class GAMEBEHAVIOUR_API APlanet : public AActor
 	GENERATED_BODY()
 
 public:
+	// Sets default values for this actor's properties
+	APlanet();
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+	// Initializes data
+	virtual void OnConstruction(const FTransform& transform) override;
+
+private:
+
+public:
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = Components)
 	UStaticMeshComponent* Atmosphere;
 
@@ -28,7 +45,7 @@ public:
 	UMaterialInstance* PlanetMaterial;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Properties")
-	float RotationSpeed = 0.0f;
+	float RotationSpeed = 1.0f;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Properties")
 	float PlanetScale = 1.9f;
@@ -46,21 +63,15 @@ public:
 	FVector Velocity = { 0, 100, 0 };
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Physics", meta = (EditCondition = "!bFixed"))
-	AActor*	Parent;
+	APlanet*	Parent;
 
-public:	
-	// Sets default values for this actor's properties
-	APlanet();
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Physics")
+	APlanet*	Sun;
+	
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Planet|Graphics")
+	UMaterialInstanceDynamic* DynamicAtmosphere;
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-	// Initializes data
-	virtual void OnConstruction(const FTransform& transform) override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Planet|Graphics")
+	UMaterialInstanceDynamic* DynamicPlanet;
 
 };

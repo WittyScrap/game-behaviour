@@ -3,11 +3,23 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine.h"
 #include "GameFramework/Actor.h"
+#include "Planet.h"
+
 #include "SolarSystem.generated.h"
 
+USTRUCT(BlueprintType)
+struct FPlanetData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category="Default") TSubclassOf<class APlanet> Type;
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category="Default") float Distance;
+};
+
 UCLASS()
-class GAMEBEHAVIOUR_API ASolarSystem : public AActor
+class GAMEBEHAVIOUR_API ASolarSystem : public APawn
 {
 	GENERATED_BODY()
 	
@@ -19,8 +31,17 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Solar System|Setup data")
+	TArray<FPlanetData> PlanetsConfiguration;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Solar System|Runtime data (read-only)")
+	TArray<APlanet*> Planets;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Solar System|Setup data")
+	float Scale = 1.f;
 
 };
