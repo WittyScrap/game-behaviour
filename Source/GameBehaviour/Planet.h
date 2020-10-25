@@ -26,52 +26,50 @@ protected:
 	// Initializes data
 	virtual void OnConstruction(const FTransform& transform) override;
 
-private:
-
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = Components)
-	UStaticMeshComponent* Atmosphere;
+	UStaticMeshComponent* 		Atmosphere;
 
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = Components)
-	UStaticMeshComponent* Planet;
+	UStaticMeshComponent* 		Planet;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Shader data")
-	UMaterialInstance* AtmosphereMaterial;
+	UMaterialInstance* 			AtmosphereMaterial;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Shader data")
-	UMaterialInstance* PlanetMaterial;
+	UMaterialInstance* 			PlanetMaterial;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Properties")
-	float RotationSpeed = 1.0f;
+	float 						RotationSpeed = 1.0f;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Properties")
-	float PlanetScale = 1.9f;
+	float 						PlanetScale = 1.9f;
 	
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Properties")
-	FString PlanetName = "Planet";
+	FString 					PlanetName = "Planet";
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Physics")
-	float Gravity = 9.807f;
+	float 						Gravity = 9.807f;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Physics")
-	bool bFixed = false;
+	bool 						bFixed = false;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Physics", meta = (EditCondition = "!bFixed"))
-	FVector Velocity = { 0, 100, 0 };
+	FVector 					Velocity = { 0, 100, 0 };
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Physics", meta = (EditCondition = "!bFixed"))
-	APlanet*	Parent;
+	APlanet*					Parent;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Physics")
-	APlanet*	Sun;
+	APlanet*					Sun;
 	
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Planet|Graphics")
-	UMaterialInstanceDynamic* DynamicAtmosphere;
+	UMaterialInstanceDynamic* 	DynamicAtmosphere;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Planet|Graphics")
-	UMaterialInstanceDynamic* DynamicPlanet;
+	UMaterialInstanceDynamic* 	DynamicPlanet;
 
 };

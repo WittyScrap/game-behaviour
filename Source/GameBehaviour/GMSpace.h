@@ -14,5 +14,6 @@ class GAMEBEHAVIOUR_API AGMSpace : public AGameModeBase
 {
 	GENERATED_BODY()
 	
-	
+public:
+	AGMSpace(const FObjectInitializer& initializer);
 };
