@@ -57,10 +57,10 @@ public:
 	TArray<APlanet*> 		Planets;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Solar System|Setup data")
-	float 					Scale = 1.f;
+	float 					MovementSpeed = 1.f;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Solar System|Setup data")
-	float 					StillScale = 100.f;
+	float 					Size = 100.f;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Solar System|Setup data")
 	FVector					Offset;

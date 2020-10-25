@@ -24,11 +24,7 @@ ASolarSystem::ASolarSystem()
 // Called every frame
 void ASolarSystem::Tick(float DeltaTime)
 {
-	this->SystemRoot->AddActorWorldOffset(-this->MovementVector);
-	bool moving = this->MovementVector.SizeSquared() > 0.01f;
-	float size = this->Scale * moving + this->StillScale * !moving;
-
-	this->SetActorScale3D({ size, size, size });
+	this->SystemRoot->AddActorWorldOffset(-this->MovementVector * this->MovementSpeed);
 }
 
 // Manages input
@@ -75,7 +71,7 @@ void ASolarSystem::HorizontalAxis(float value)
 // Zoom in/out (speed multiplier)
 void ASolarSystem::ZoomAxis(float value)
 {
-	this->Scale = std::max(this->Scale + value, 0.05f);
+	this->MovementSpeed = std::max(this->MovementSpeed + value, 0.05f);
 }
 
 // Left mouse has been pressed
@@ -128,6 +124,6 @@ void ASolarSystem::BeginPlay()
 		planet->AttachToActor(this->SystemRoot, FAttachmentTransformRules::KeepWorldTransform);
 	}
 	
+	this->SetActorScale3D({ this->Size, this->Size, this->Size });
 	this->SystemRoot->SetActorLocation(this->Offset);
-	this->SetActorScale3D({ this->Scale, this->Scale, this->Scale });
 }
