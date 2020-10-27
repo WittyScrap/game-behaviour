@@ -20,6 +20,9 @@ APlanet::APlanet()
 void APlanet::BeginPlay()
 {
 	Super::BeginPlay();
+
+	float radius = this->Radius * __UnitsOfMeasure[(int)this->UnitOfMeasure];
+	this->SetActorScale3D({ radius, radius, radius });
 	
 	this->DynamicAtmosphere = UMaterialInstanceDynamic::Create(this->AtmosphereMaterial, this);
 	this->DynamicPlanet = UMaterialInstanceDynamic::Create(this->PlanetMaterial, this); 
