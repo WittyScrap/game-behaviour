@@ -9,6 +9,7 @@
 #include "Components/InputComponent.h"
 #include "Planet.h"
 #include "EmptyNode.h"
+#include "SymbolsCore.h"
 
 #include "SolarSystem.generated.h"
 
@@ -32,15 +33,28 @@ public:
 
 	// Input system
 	virtual void SetupPlayerInputComponent(class UInputComponent* Input) override;
-
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 	
 	void MouseXAxis(float value);
 	void MouseYAxis(float value);
-	void ForwardAxis(float value);
-	void HorizontalAxis(float value);
-	void ZoomAxis(float value);
+	// void ForwardAxis(float value);
+	// void HorizontalAxis(float value);
+	// void ZoomAxis(float value);
+
+	/**
+	 * Focuses the camera on a specific planet (by-ID). 
+	 * Planets IDs are assigned based on their entry index
+	 * in the configuration array. 
+	 * 
+	 * All celestial bodies controlled by this `ASolarSystem` have
+	 * an ID, including stars and moons. 
+	 * 
+	 * @param planetID The ID of the planet/celestial body to focus to
+	 */
+	__FORCE_INLINE__ void __FAST_CALL__ Focus(uint8_t planetID)
+	{
+		this->SystemRoot->SetActorLocation(-this->Planets[planetID]->GetActorLocation());
+		this->PlayerCamera->SetRelativeLocation(-this->PlayerCamera->GetRelativeLocation().GetSafeNormal(0.01f) * this->Planets[planetID]->GetActorRelativeScale3D().X * this->Size);
+	}
 
 	void OnMouseDown();
 	void OnMouseUp();
@@ -61,21 +75,20 @@ public:
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Solar System|Setup data")
 	float 					Size = 100.f;
-	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Solar System|Setup data")
-	FVector					Offset;
 
-	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = Components)
-	UCameraComponent* 		PlayerCamera;
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
+	UCameraComponent*		PlayerCamera;
 
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = Components)
 	USceneComponent*		Root;
+	
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = Components)
+	USceneComponent*		Pivot;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Solar System|Runtime data (read-only)")
 	AEmptyNode*				SystemRoot;
 
-private:
-	FVector					MovementVector;
-	FRotator				RotationRotator;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Solar System|Setup data", meta = (ClampMin = 0, SliderMin = 0))
+	int						FocusedBody = 0;
 
 };

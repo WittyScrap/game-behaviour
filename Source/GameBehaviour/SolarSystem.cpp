@@ -12,19 +12,16 @@
 // Sets default values
 ASolarSystem::ASolarSystem()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	this->Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	this->SetRootComponent(this->Root);
 
-	this->PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("Player Camera"));
-	this->PlayerCamera->SetupAttachment(this->Root);
-}
+	this->Pivot = CreateDefaultSubobject<USceneComponent>(TEXT("Pivot"));
+	this->Pivot->SetupAttachment(this->Root);
 
-// Called every frame
-void ASolarSystem::Tick(float DeltaTime)
-{
-	this->SystemRoot->AddActorWorldOffset(-this->MovementVector * this->MovementSpeed);
+	this->PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("Player Camera"));
+	this->PlayerCamera->SetupAttachment(this->Pivot);
 }
 
 // Manages input
@@ -39,39 +36,21 @@ void ASolarSystem::SetupPlayerInputComponent(class UInputComponent* Input)
 	// Bind all axis
 	Input->BindAxis("X Axis", this, &ASolarSystem::MouseXAxis);
 	Input->BindAxis("Y Axis", this, &ASolarSystem::MouseYAxis);
-	Input->BindAxis("Zoom", this, &ASolarSystem::ZoomAxis);
-	Input->BindAxis("Horizontal", this, &ASolarSystem::HorizontalAxis);
-	Input->BindAxis("Forward", this, &ASolarSystem::ForwardAxis);
+// 	Input->BindAxis("Zoom", this, &ASolarSystem::ZoomAxis);
+// 	Input->BindAxis("Horizontal", this, &ASolarSystem::HorizontalAxis);
+// 	Input->BindAxis("Forward", this, &ASolarSystem::ForwardAxis);
 }
 
 // X axis handler
 void ASolarSystem::MouseXAxis(float value)
 {
-	; // NOOP
+	this->Pivot->AddLocalRotation({ 0, value * 2 * PI, 0 }, false, NULL);
 }
 
 // Y axis handler
 void ASolarSystem::MouseYAxis(float value)
 {
 	; // NOOP
-}
-
-// Forward movement
-void ASolarSystem::ForwardAxis(float value)
-{
-	this->MovementVector.X = value;
-}
-
-// Horizontal movement
-void ASolarSystem::HorizontalAxis(float value)
-{
-	this->MovementVector.Y = value;
-}
-
-// Zoom in/out (speed multiplier)
-void ASolarSystem::ZoomAxis(float value)
-{
-	this->MovementSpeed = std::max(this->MovementSpeed + value, 0.05f);
 }
 
 // Left mouse has been pressed
@@ -125,5 +104,5 @@ void ASolarSystem::BeginPlay()
 	}
 	
 	this->SetActorScale3D({ this->Size, this->Size, this->Size });
-	this->SystemRoot->SetActorLocation(this->Offset);
+	this->Focus(this->FocusedBody);
 }
