@@ -43,6 +43,17 @@ void APlanet::Tick(float DeltaTime)
 
 	FRotator rot(0, this->RotationSpeed * DeltaTime, 0);
 	this->AddActorLocalRotation(rot, false, NULL, ETeleportType::None);
+
+	// Apply gravity
+	float sqrDst = (this->Parent->GetActorLocation() - this->GetActorLocation()).SizeSquared();
+	FVector forceDir = (this->Parent->GetActorLocation() - this->GetActorLocation()).GetSafeNormal(0.01f);
+	FVector force = forceDir * G_CONST * this->GetMass() * this->Parent->GetMass() / sqrDst;
+	FVector acceleration = force / this->GetMass();
+
+	this->Velocity += acceleration;
+
+	// Move planet
+	this->AddActorWorldOffset(this->Velocity);
 }
 
 // Updates shader data 

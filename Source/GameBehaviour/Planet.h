@@ -2,11 +2,14 @@
 
 #pragma once
 
+#define G_CONST 0.0000000000674
+
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/StaticMeshComponent.h"
 #include "Materials/MaterialInstance.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "SymbolsCore.h"
 
 #include "Planet.generated.h"
 
@@ -56,6 +59,19 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	/**
+	 * Returns the mass of this planet given its radius and
+	 * gravity.
+	 * 
+	 * @return This planet's mass.
+	 */
+	UFUNCTION(BlueprintPure)
+	float GetMass()
+	{
+		float radius = this->Radius * __UnitsOfMeasure[(int)this->UnitOfMeasure];
+		return (this->Gravity * radius * radius) / G_CONST;
+	}
+
+	/**
 	 * Returns the multiplier value for a given measurement unit.
 	 * 
 	 * @param unit The measurement unit to retrieve a measure multiplier for.
@@ -65,6 +81,23 @@ public:
 	static float GetUnitOfMeasurement(EMeasurementUnit unit)
 	{
 		return __UnitsOfMeasure[(int)unit];
+	}
+
+	/**
+	 * Sets this body in orbit around the given parent body and sets
+	 * itself as its child.
+	 * 
+	 * @param parent The body to orbit
+	 */
+	UFUNCTION(BlueprintCallable)
+	void Orbit(APlanet* parent)
+	{
+		FVector direction = parent->GetActorLocation() - this->GetActorLocation();
+		float velocity = FMath::Sqrt(G_CONST * parent->GetMass() / direction.Size());
+		FVector orbit = FVector::CrossProduct(FVector::UpVector, direction.GetSafeNormal(0.01f));
+
+		this->Velocity = orbit * velocity;
+		this->Parent = parent;
 	}
 
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = Components)
@@ -100,8 +133,8 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Physics")
 	bool 						bFixed = false;
 
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Physics", meta = (EditCondition = "!bFixed"))
-	FVector 					Velocity = { 0, 100, 0 };
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Planet|Physics", meta = (EditCondition = "!bFixed"))
+	FVector 					Velocity = { 0, 0, 0 };
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Physics", meta = (EditCondition = "!bFixed"))
 	APlanet*					Parent;
