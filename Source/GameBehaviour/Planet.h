@@ -72,6 +72,17 @@ public:
 	}
 
 	/**
+	 * Returns the radius of this planet in world units.
+	 * 
+	 * @return This planet's radius.
+	 */
+	UFUNCTION(BlueprintPure)
+	float GetUnitsRadius()
+	{
+		return this->Radius * __UnitsOfMeasure[(int)this->UnitOfMeasure] * 100;
+	}
+
+	/**
 	 * Returns the multiplier value for a given measurement unit.
 	 * 
 	 * @param unit The measurement unit to retrieve a measure multiplier for.
