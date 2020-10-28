@@ -9,6 +9,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "Materials/MaterialInstance.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "Components/SceneCaptureComponent2D.h"
+#include "Engine/TextureRenderTarget2D.h"
 #include "SymbolsCore.h"
 
 #include "Planet.generated.h"
@@ -117,6 +119,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = Components)
 	UStaticMeshComponent* 		Planet;
 
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = Components)
+	USceneCaptureComponent2D*	PreviewCamera;
+
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Shader data")
 	UMaterialInstance* 			AtmosphereMaterial;
 
@@ -158,5 +163,7 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Planet|Graphics")
 	UMaterialInstanceDynamic* 	DynamicPlanet;
-
+	
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Planet|Graphics")
+	UTextureRenderTarget2D* 	PreviewTarget;
 };

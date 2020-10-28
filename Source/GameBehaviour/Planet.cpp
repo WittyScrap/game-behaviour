@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "Kismet/KismetRenderingLibrary.h"
+#include "Engine.h"
 #include "Planet.h"
 
 // Sets default values
@@ -14,6 +15,10 @@ APlanet::APlanet()
 
 	this->Planet = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Planet"));
 	this->Planet->SetupAttachment(this->Atmosphere);
+	
+	this->PreviewCamera = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("Preview Camera"));
+	this->PreviewCamera->SetupAttachment(this->Planet);
+	this->PreviewCamera->SetRelativeLocation({ -400.f, 0, 0 });
 }
 
 // Called when the game starts or when spawned
@@ -23,6 +28,10 @@ void APlanet::BeginPlay()
 
 	float radius = this->Radius * __UnitsOfMeasure[(int)this->UnitOfMeasure];
 	this->SetActorScale3D({ radius, radius, radius });
+
+	UWorld* world = GetWorld();
+	this->PreviewTarget = UKismetRenderingLibrary::CreateRenderTarget2D(world, 256, 256);
+//	this->PreviewCamera->TextureTarget = this->PreviewTarget;
 	
 	this->DynamicAtmosphere = UMaterialInstanceDynamic::Create(this->AtmosphereMaterial, this);
 	this->DynamicPlanet = UMaterialInstanceDynamic::Create(this->PlanetMaterial, this); 
