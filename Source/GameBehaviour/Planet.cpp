@@ -31,7 +31,7 @@ void APlanet::BeginPlay()
 
 	UWorld* world = GetWorld();
 	this->PreviewTarget = UKismetRenderingLibrary::CreateRenderTarget2D(world, 256, 256);
-//	this->PreviewCamera->TextureTarget = this->PreviewTarget;
+	this->PreviewCamera->TextureTarget = this->PreviewTarget;
 	
 	this->DynamicAtmosphere = UMaterialInstanceDynamic::Create(this->AtmosphereMaterial, this);
 	this->DynamicPlanet = UMaterialInstanceDynamic::Create(this->PlanetMaterial, this); 
