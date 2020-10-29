@@ -97,6 +97,18 @@ public:
 	}
 
 	/**
+	 * Returns the multiplier value for a given measurement unit.
+	 * 
+	 * @param unit The measurement unit to retrieve a measure multiplier for.
+	 * @return A multiplier for the given measure. For example, Metres will return 100.
+	 */
+	template<typename T>
+	static T GetScaledUnit(T value, EMeasurementUnit unit)
+	{
+		return value * __UnitsOfMeasure[(int)unit];
+	}
+
+	/**
 	 * Sets this body in orbit around the given parent body and sets
 	 * itself as its child.
 	 * 
@@ -105,11 +117,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Orbit(APlanet* parent)
 	{
-		FVector direction = parent->GetActorLocation() - this->GetActorLocation();
-		float velocity = FMath::Sqrt(G_CONST * parent->GetMass() / direction.Size());
-		FVector orbit = FVector::CrossProduct(FVector::UpVector, direction.GetSafeNormal(0.01f));
+		if (parent != this)
+		{
+			FVector direction = parent->GetActorLocation() - this->GetActorLocation();
+			float velocity = FMath::Sqrt(G_CONST * parent->GetMass() / direction.Size());
+			FVector orbit = FVector::CrossProduct(FVector::UpVector, direction.GetSafeNormal(0.01f));
 
-		this->Velocity = orbit * velocity;
+			this->Velocity = orbit * velocity;
+		}
+
 		this->Parent = parent;
 	}
 
@@ -139,7 +155,7 @@ public:
 	
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Properties")
 	EMeasurementUnit			UnitOfMeasure = EMeasurementUnit::Metre;
-	
+
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Properties")
 	FString 					PlanetName = "Planet";
 

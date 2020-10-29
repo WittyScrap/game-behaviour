@@ -43,7 +43,24 @@ public:
 
 		this->Velocity = orbit * velocity;
 		this->Parent = parent;
+
+		this->PreviousParentLocation = this->Parent->GetActorLocation();
 	}
+
+	/**
+	 * Adds a force to this spacecraft scaled by the spacecraft's
+	 * mass.
+	 * 
+	 * @param force The force to apply to the spacecraft
+	 */
+	UFUNCTION(BlueprintCallable)
+	void AddForce(const FVector& force)
+	{
+		this->Velocity += force / this->Mass;
+	}
+
+private:
+	FVector						PreviousParentLocation;
 
 public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Spacecraft|Properties")

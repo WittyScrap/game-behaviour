@@ -45,24 +45,32 @@ void APlanet::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FVector lightDir = this->Sun->GetActorLocation() - this->GetActorLocation();
+	if (this->Sun)
+	{
+		FVector lightDir = this->Sun->GetActorLocation() - this->GetActorLocation();
 
-	this->DynamicAtmosphere->SetVectorParameterValue("Light Direction", lightDir);
-	this->DynamicPlanet->SetVectorParameterValue("Light Direction", lightDir);
+		this->DynamicAtmosphere->SetVectorParameterValue("Light Direction", lightDir);
+		this->DynamicPlanet->SetVectorParameterValue("Light Direction", lightDir);
+	}
 
 	FRotator rot(0, this->RotationSpeed * DeltaTime, 0);
 	this->AddActorLocalRotation(rot, false, NULL, ETeleportType::None);
 
-	// Apply gravity
-	float sqrDst = (this->Parent->GetActorLocation() - this->GetActorLocation()).SizeSquared();
-	FVector forceDir = (this->Parent->GetActorLocation() - this->GetActorLocation()).GetSafeNormal(0.01f);
-	FVector force = forceDir * G_CONST * this->GetMass() * this->Parent->GetMass() / sqrDst;
-	FVector acceleration = force / this->GetMass();
+	if (this->Parent != this)
+	{
+		// Apply gravity
+		float sqrDst = (this->Parent->GetActorLocation() - this->GetActorLocation()).SizeSquared();
+		FVector forceDir = (this->Parent->GetActorLocation() - this->GetActorLocation()).GetSafeNormal(0.01f);
+		FVector force = forceDir * G_CONST * this->GetMass() * this->Parent->GetMass() / sqrDst;
+		FVector acceleration = force / this->GetMass();
 
-	this->Velocity += acceleration;
+		this->Velocity += acceleration;
+		
+		FVector location = this->GetActorLocation();
+		location += this->Velocity + this->Parent->Velocity;
 
-	// Move planet
-	this->AddActorWorldOffset(this->Velocity);
+		this->SetActorLocation(location);
+	}
 }
 
 // Updates shader data 

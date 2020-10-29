@@ -23,6 +23,14 @@ void ASpacecraft::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
+	FVector parentLocation = this->Parent->GetActorLocation();
+	FVector offset = parentLocation - this->PreviousParentLocation;
+	this->PreviousParentLocation = parentLocation;
+
+	UE_LOG(LogTemp, Warning, TEXT("Offset: %s"), *offset.ToString());
+
+	this->AddActorWorldOffset(offset);
+	
 	// Apply gravity
 	float sqrDst = (this->Parent->GetActorLocation() - this->GetActorLocation()).SizeSquared();
 	FVector forceDir = (this->Parent->GetActorLocation() - this->GetActorLocation()).GetSafeNormal(0.01f);
@@ -31,8 +39,11 @@ void ASpacecraft::Tick(float DeltaTime)
 
 	this->Velocity += acceleration;
 
-	// Move planet
-	this->AddActorWorldOffset(this->Velocity);
+	// Move
+	FVector location = this->GetActorLocation();
+	location += this->Velocity;
+
+	this->SetActorLocation(location);
 }
 
 // Called to bind functionality to input
