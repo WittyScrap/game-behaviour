@@ -64,7 +64,18 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetThrottleDirection(float throttling)
 	{
-		SetThrottling(throttling);
+		this->OnThrottleDirectionSet(throttling);
+	}
+
+	/**
+	 * Feeds roll, pitch, and yaw input values.
+	 * 
+	 * @param input The combined input values.
+	 */
+	UFUNCTION(BlueprintCallable)
+	void SetInput(FRotator input)
+	{
+		this->OnInputSet(input);
 	}
 
 	/**
@@ -73,7 +84,15 @@ public:
 	 * @param throttling Whether or not the throttle is changing.
 	 */
 	UFUNCTION(BlueprintImplementableEvent)
-	void SetThrottling(float throttling);
+	void OnThrottleDirectionSet(float throttling);
+	
+	/**
+	 * Sets whether or not the throttle is being manipulated.
+	 * 
+	 * @param throttling Whether or not the throttle is changing.
+	 */
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnInputSet(FRotator throttling);
 
 private:
 	FVector						PreviousParentLocation;
