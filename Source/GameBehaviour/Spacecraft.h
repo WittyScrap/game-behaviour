@@ -41,10 +41,7 @@ public:
 		float velocity = FMath::Sqrt(G_CONST * parent->GetMass() / direction.Size());
 		FVector orbit = FVector::CrossProduct(FVector::UpVector, direction.GetSafeNormal(0.01f));
 
-		this->Velocity = orbit * velocity;
-		this->Parent = parent;
-
-		this->PreviousParentLocation = this->Parent->GetActorLocation();
+		this->Velocity = orbit * velocity + parent->Velocity;
 	}
 
 	/**
@@ -58,6 +55,25 @@ public:
 	{
 		this->Velocity += force / this->Mass;
 	}
+
+	/**
+	 * Sets whether or not the throttle is being manipulated.
+	 * 
+	 * @param throttling Whether or not the throttle is changing.
+	 */
+	UFUNCTION(BlueprintCallable)
+	void SetThrottleDirection(float throttling)
+	{
+		SetThrottling(throttling);
+	}
+
+	/**
+	 * Sets whether or not the throttle is being manipulated.
+	 * 
+	 * @param throttling Whether or not the throttle is changing.
+	 */
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetThrottling(float throttling);
 
 private:
 	FVector						PreviousParentLocation;
@@ -73,7 +89,7 @@ public:
 	FVector 					Velocity = { 0, 0, 0 };
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Spacecraft|Physics")
-	APlanet*					Parent;
+	TArray<APlanet*>			Planets;
 
 
 };

@@ -159,7 +159,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Properties")
 	FString 					PlanetName = "Planet";
 
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Physics")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Planet|Physics")
 	float 						Gravity = 9.807f;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Physics")

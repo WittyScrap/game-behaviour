@@ -15,36 +15,29 @@ ASpacecraft::ASpacecraft()
 void ASpacecraft::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
 void ASpacecraft::Tick(float DeltaTime)
-{
+<%
 	Super::Tick(DeltaTime);
 	
-	FVector parentLocation = this->Parent->GetActorLocation();
-	FVector offset = parentLocation - this->PreviousParentLocation;
-	this->PreviousParentLocation = parentLocation;
-
-	UE_LOG(LogTemp, Warning, TEXT("Offset: %s"), *offset.ToString());
-
-	this->AddActorWorldOffset(offset);
-	
 	// Apply gravity
-	float sqrDst = (this->Parent->GetActorLocation() - this->GetActorLocation()).SizeSquared();
-	FVector forceDir = (this->Parent->GetActorLocation() - this->GetActorLocation()).GetSafeNormal(0.01f);
-	FVector force = forceDir * G_CONST * this->Mass * this->Parent->GetMass() / sqrDst;
-	FVector acceleration = force / this->Mass;
+	for (int i = 0; i < this->Planets.Num(); ++i)
+	{
+		APlanet* planet = this->Planets[i];
 
-	this->Velocity += acceleration;
+		float sqrDst = (planet->GetActorLocation() - this->GetActorLocation()).SizeSquared();
+		FVector forceDir = (planet->GetActorLocation() - this->GetActorLocation()).GetSafeNormal(0.01f);
+		FVector force = forceDir * G_CONST * this->Mass * planet->GetMass() / sqrDst;
+		FVector acceleration = force / this->Mass;
+
+		this->Velocity += acceleration;
+	}
 
 	// Move
-	FVector location = this->GetActorLocation();
-	location += this->Velocity;
-
-	this->SetActorLocation(location);
-}
+	this->AddActorWorldOffset(this->Velocity);
+%>
 
 // Called to bind functionality to input
 void ASpacecraft::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
