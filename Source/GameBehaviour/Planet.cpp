@@ -45,6 +45,11 @@ void APlanet::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (this->bPaused)
+	{
+		return;
+	}
+
 	if (this->Sun)
 	{
 		FVector lightDir = this->Sun->GetActorLocation() - this->GetActorLocation();

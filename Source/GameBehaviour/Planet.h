@@ -129,6 +129,27 @@ public:
 		this->Parent = parent;
 	}
 
+	
+	/**
+	 * Pauses the simulation for this solar system.
+	 * 
+	 */
+	UFUNCTION(BlueprintCallable)
+	void Pause() 
+	{
+		this->bPaused = true;
+	}
+
+	/**
+	 * Resumes the simulation for this solar system.
+	 * 
+	 */
+	UFUNCTION(BlueprintCallable)
+	void Unpause()
+	{
+		this->bPaused = false;
+	}
+
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = Components)
 	UStaticMeshComponent* 		Atmosphere;
 
@@ -182,4 +203,8 @@ public:
 	
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Planet|Graphics")
 	UTextureRenderTarget2D* 	PreviewTarget;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Solar System|Runtime data (read-only)")
+	bool					bPaused = false;
+
 };

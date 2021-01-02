@@ -56,6 +56,35 @@ public:
 		this->PlayerCamera->SetRelativeLocation(-this->PlayerCamera->GetRelativeLocation().GetSafeNormal(0.01f) * this->Planets[planetID]->GetActorRelativeScale3D().X * this->Size);
 	}
 
+	/**
+	 * Pauses the simulation for this solar system.
+	 * 
+	 */
+	UFUNCTION(BlueprintCallable)
+	void Pause() 
+	{
+		int len = this->Planets.Num();
+		for (int i = 0; i < len; i += 1) 
+		{
+			this->Planets[i]->Pause();
+		}
+	}
+
+	/**
+	 * Resumes the simulation for this solar system.
+	 * 
+	 */
+	UFUNCTION(BlueprintCallable)
+	void Unpause()
+	{
+		int len = this->Planets.Num();
+		for (int i = 0; i < len; i += 1) 
+		{
+			this->Planets[i]->Unpause();
+		}
+	}
+
+
 	void OnMouseDown();
 	void OnMouseUp();
 
