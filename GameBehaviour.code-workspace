@@ -13,7 +13,20 @@
 		"typescript.tsc.autoDetect": "off",
 		"files.associations": {
 			"xiosbase": "cpp",
-			"cmath": "cpp"
+			"cmath": "cpp",
+			"array": "cpp",
+			"utility": "cpp",
+			"xutility": "cpp",
+			"compare": "cpp",
+			"functional": "cpp",
+			"memory": "cpp",
+			"tuple": "cpp",
+			"type_traits": "cpp",
+			"xmemory": "cpp",
+			"xtr1common": "cpp",
+			"__functional_base": "cpp",
+			"algorithm": "cpp",
+			"limits": "cpp"
 		}
 	},
 	"extensions": {

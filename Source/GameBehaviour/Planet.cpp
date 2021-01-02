@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "Planet.h"
 #include "Kismet/KismetRenderingLibrary.h"
 #include "Engine.h"
-#include "Planet.h"
 
 // Sets default values
 APlanet::APlanet()
@@ -64,12 +64,8 @@ void APlanet::Tick(float DeltaTime)
 		FVector force = forceDir * G_CONST * this->GetMass() * this->Parent->GetMass() / sqrDst;
 		FVector acceleration = force / this->GetMass();
 
-		this->Velocity += acceleration;
-		
-		FVector location = this->GetActorLocation();
-		location += this->Velocity + this->Parent->Velocity;
-
-		this->SetActorLocation(location);
+		this->Velocity += acceleration * DeltaTime;
+		this->AddActorWorldOffset(this->Velocity * DeltaTime);
 	}
 }
 

@@ -110,7 +110,7 @@ public:
 
 	/**
 	 * Sets this body in orbit around the given parent body and sets
-	 * itself as its child.
+	 * itself as its tracked child.
 	 * 
 	 * @param parent The body to orbit
 	 */
@@ -123,7 +123,7 @@ public:
 			float velocity = FMath::Sqrt(G_CONST * parent->GetMass() / direction.Size());
 			FVector orbit = FVector::CrossProduct(FVector::UpVector, direction.GetSafeNormal(0.01f));
 
-			this->Velocity = orbit * velocity;
+			this->Velocity = orbit * velocity + parent->Velocity;
 		}
 
 		this->Parent = parent;

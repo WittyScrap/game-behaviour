@@ -79,6 +79,7 @@ void ASolarSystem::BeginPlay()
 		
 	FActorSpawnParameters spawnParams;
 	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	spawnParams.Owner = this;
 
 	this->SystemRoot = Cast<AEmptyNode>(world->SpawnActor(AEmptyNode::StaticClass(), &position, &rotation, spawnParams));
 	this->SystemRoot->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);

@@ -32,11 +32,11 @@ void ASpacecraft::Tick(float DeltaTime)
 		FVector force = forceDir * G_CONST * this->Mass * planet->GetMass() / sqrDst;
 		FVector acceleration = force / this->Mass;
 
-		this->Velocity += acceleration;
+		this->Velocity += acceleration * DeltaTime;
 	}
 
 	// Move
-	this->AddActorWorldOffset(this->Velocity);
+	this->AddActorWorldOffset(this->Velocity * DeltaTime);
 %>
 
 // Called to bind functionality to input
