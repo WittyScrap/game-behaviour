@@ -150,6 +150,10 @@ public:
 		this->bPaused = false;
 	}
 
+	
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = Components)
+	USceneComponent*			Root;
+
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = Components)
 	UStaticMeshComponent* 		Atmosphere;
 

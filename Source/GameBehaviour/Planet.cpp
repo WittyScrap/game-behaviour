@@ -10,8 +10,11 @@ APlanet::APlanet()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	this->Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	this->SetRootComponent(this->Root);
+
 	this->Atmosphere = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Atmosphere"));
-	this->SetRootComponent(this->Atmosphere);
+	this->Atmosphere->SetupAttachment(this->Root);
 
 	this->Planet = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Planet"));
 	this->Planet->SetupAttachment(this->Atmosphere);
