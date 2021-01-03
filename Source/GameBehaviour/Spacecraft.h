@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "Components/CapsuleComponent.h"
 #include "Planet.h"
 
 #include "Spacecraft.generated.h"
@@ -109,6 +110,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Spacecraft|Physics")
 	TArray<APlanet*>			Planets;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Components")
+	UCapsuleComponent*			Collision;
 
 
 };

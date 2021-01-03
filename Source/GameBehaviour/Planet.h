@@ -2,8 +2,6 @@
 
 #pragma once
 
-#define G_CONST 0.0000000000674
-
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/StaticMeshComponent.h"
@@ -12,6 +10,7 @@
 #include "Components/SceneCaptureComponent2D.h"
 #include "Engine/TextureRenderTarget2D.h"
 #include "SymbolsCore.h"
+#include "OrbitalBody.h"
 
 #include "Planet.generated.h"
 
@@ -41,7 +40,7 @@ enum class EMeasurementUnit : uint8
 };
 
 UCLASS()
-class GAMEBEHAVIOUR_API APlanet : public AActor
+class GAMEBEHAVIOUR_API APlanet : public AOrbitalBody
 {
 	GENERATED_BODY()
 
@@ -66,8 +65,7 @@ public:
 	 * 
 	 * @return This planet's mass.
 	 */
-	UFUNCTION(BlueprintPure)
-	float GetMass()
+	virtual float GetMass() override
 	{
 		float radius = this->Radius * __UnitsOfMeasure[(int)this->UnitOfMeasure];
 		return (this->Gravity * radius * radius) / G_CONST;
@@ -107,49 +105,6 @@ public:
 	{
 		return value * __UnitsOfMeasure[(int)unit];
 	}
-
-	/**
-	 * Sets this body in orbit around the given parent body and sets
-	 * itself as its child.
-	 * 
-	 * @param parent The body to orbit
-	 */
-	UFUNCTION(BlueprintCallable)
-	void Orbit(APlanet* parent)
-	{
-		if (parent != this)
-		{
-			FVector direction = parent->GetActorLocation() - this->GetActorLocation();
-			float velocity = FMath::Sqrt(G_CONST * parent->GetMass() / direction.Size());
-			FVector orbit = FVector::CrossProduct(FVector::UpVector, direction.GetSafeNormal(0.01f));
-
-			this->Velocity = orbit * velocity;
-		}
-
-		this->Parent = parent;
-	}
-
-	
-	/**
-	 * Pauses the simulation for this solar system.
-	 * 
-	 */
-	UFUNCTION(BlueprintCallable)
-	void Pause() 
-	{
-		this->bPaused = true;
-	}
-
-	/**
-	 * Resumes the simulation for this solar system.
-	 * 
-	 */
-	UFUNCTION(BlueprintCallable)
-	void Unpause()
-	{
-		this->bPaused = false;
-	}
-
 	
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = Components)
 	USceneComponent*			Root;
@@ -187,18 +142,6 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Planet|Physics")
 	float 						Gravity = 9.807f;
 
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Physics")
-	bool 						bFixed = false;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Planet|Physics", meta = (EditCondition = "!bFixed"))
-	FVector 					Velocity = { 0, 0, 0 };
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Planet|Physics", meta = (EditCondition = "!bFixed"))
-	APlanet*					Parent;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Planet|Physics")
-	APlanet*					Sun;
-	
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Planet|Graphics")
 	UMaterialInstanceDynamic* 	DynamicAtmosphere;
 
@@ -208,7 +151,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Planet|Graphics")
 	UTextureRenderTarget2D* 	PreviewTarget;
 
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Solar System|Runtime data (read-only)")
-	bool					bPaused = false;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Planet|Graphics")
+	AOrbitalBody*				Sun;
 
 };
