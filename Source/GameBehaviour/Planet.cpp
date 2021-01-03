@@ -69,8 +69,7 @@ void APlanet::Tick(float DeltaTime)
 		// Apply gravity
 		float sqrDst = (this->Parent->GetActorLocation() - this->GetActorLocation()).SizeSquared();
 		FVector forceDir = (this->Parent->GetActorLocation() - this->GetActorLocation()).GetSafeNormal(0.01f);
-		FVector force = forceDir * G_CONST * this->GetMass() * this->Parent->GetMass() / sqrDst;
-		FVector acceleration = force / this->GetMass();
+		FVector acceleration = forceDir * G_CONST * this->Parent->GetMass() / sqrDst;
 
 		this->Velocity += acceleration * DeltaTime;
 		

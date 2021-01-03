@@ -29,8 +29,7 @@ void ASpacecraft::Tick(float DeltaTime)
 
 		float sqrDst = (planet->GetActorLocation() - this->GetActorLocation()).SizeSquared();
 		FVector forceDir = (planet->GetActorLocation() - this->GetActorLocation()).GetSafeNormal(0.01f);
-		FVector force = forceDir * G_CONST * this->Mass * planet->GetMass() / sqrDst;
-		FVector acceleration = force / this->Mass;
+		FVector acceleration = forceDir * G_CONST * planet->GetMass() / sqrDst;
 
 		this->Velocity += acceleration * DeltaTime;
 	}
