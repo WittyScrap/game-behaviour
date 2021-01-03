@@ -189,10 +189,10 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Planet|Physics", meta = (EditCondition = "!bFixed"))
 	FVector 					Velocity = { 0, 0, 0 };
 
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Physics", meta = (EditCondition = "!bFixed"))
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Planet|Physics", meta = (EditCondition = "!bFixed"))
 	APlanet*					Parent;
 
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Physics")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Planet|Physics")
 	APlanet*					Sun;
 	
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Planet|Graphics")

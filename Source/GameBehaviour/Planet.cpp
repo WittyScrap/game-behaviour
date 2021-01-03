@@ -69,10 +69,10 @@ void APlanet::Tick(float DeltaTime)
 		FVector force = forceDir * G_CONST * this->GetMass() * this->Parent->GetMass() / sqrDst;
 		FVector acceleration = force / this->GetMass();
 
-		this->Velocity += acceleration;
+		this->Velocity += acceleration * DeltaTime;
 		
 		FVector location = this->GetActorLocation();
-		location += this->Velocity + this->Parent->Velocity;
+		location += (this->Velocity + this->Parent->Velocity) * DeltaTime;
 
 		this->SetActorLocation(location);
 	}
