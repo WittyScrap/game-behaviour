@@ -46,10 +46,10 @@ public:
 		if (parent != this)
 		{
 			FVector direction = parent->GetActorLocation() - this->GetActorLocation();
+			FVector orbit = FVector::CrossProduct(FVector::UpVector, direction.GetSafeNormal(0.01f)).GetSafeNormal(0.01f);
 			float velocity = FMath::Sqrt(G_CONST * parent->GetMass() / direction.Size());
-			FVector orbit = FVector::CrossProduct(FVector::UpVector, direction.GetSafeNormal(0.01f));
 
-			this->Velocity = orbit * velocity;
+			this->Velocity = orbit * velocity + parent->Velocity;
 		}
 
 		this->Parent = parent;
