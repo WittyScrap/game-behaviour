@@ -78,7 +78,7 @@ public:
 	{
 		if (this->Parent)
 		{
-			this->Collision->SetPhysicsLinearVelocity(this->Velocity + this->Parent->Velocity);
+			this->Collision->SetPhysicsLinearVelocity(this->Velocity);
 		}
 	}
 

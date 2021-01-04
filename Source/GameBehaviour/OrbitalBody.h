@@ -62,7 +62,7 @@ public:
 	virtual void PhysicsMove(float DeltaTime) 
 	{
 		FVector location = this->GetActorLocation();
-		location += (this->Velocity + this->Parent->Velocity) * DeltaTime;
+		location += this->Velocity * DeltaTime;
 
 		this->SetActorLocation(location);
 	}
