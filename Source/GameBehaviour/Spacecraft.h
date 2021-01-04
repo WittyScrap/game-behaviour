@@ -87,7 +87,7 @@ public:
 	 */
 	virtual void AddImpulse(FVector impulse) override
 	{
-		Super::AddImpulse(impulse);
+		this->Velocity += impulse;
 		this->Collision->AddImpulse(impulse, " ", true);
 	}
 
