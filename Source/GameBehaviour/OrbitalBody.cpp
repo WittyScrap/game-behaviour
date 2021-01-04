@@ -8,7 +8,7 @@ AOrbitalBody::AOrbitalBody()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	PrimaryActorTick.TickGroup = TG_DuringPhysics;
 }
 
 // Called when the game starts or when spawned
@@ -28,7 +28,7 @@ void AOrbitalBody::Tick(float DeltaTime)
 		return;
 	}
 
-	if (this->Parent != this)
+	if (this->Parent && this->Parent != this)
 	{
 		// Apply gravity
 		float sqrDst = (this->Parent->GetActorLocation() - this->GetActorLocation()).SizeSquared();

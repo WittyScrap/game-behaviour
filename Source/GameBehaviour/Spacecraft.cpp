@@ -11,40 +11,6 @@ ASpacecraft::ASpacecraft()
 
 	this->Collision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Collision"));
 	this->SetRootComponent(this->Collision);
-
+	this->Collision->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	this->Collision->SetSimulatePhysics(true);
 }
-
-// Called when the game starts or when spawned
-void ASpacecraft::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
-// Called every frame
-void ASpacecraft::Tick(float DeltaTime)
-<%
-	Super::Tick(DeltaTime);
-	
-	// Apply gravity
-	for (int i = 0; i < this->Planets.Num(); ++i)
-	{
-		APlanet* planet = this->Planets[i];
-
-		float sqrDst = (planet->GetActorLocation() - this->GetActorLocation()).SizeSquared();
-		FVector forceDir = (planet->GetActorLocation() - this->GetActorLocation()).GetSafeNormal(0.01f);
-		FVector acceleration = forceDir * G_CONST * planet->GetMass() / sqrDst;
-
-		this->Velocity += acceleration * DeltaTime;
-	}
-
-	// Move
-	this->AddActorWorldOffset(this->Velocity * DeltaTime);
-%>
-
-// Called to bind functionality to input
-void ASpacecraft::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
-
