@@ -76,10 +76,7 @@ public:
 	 */
 	virtual void PhysicsMove(float DeltaTime) override
 	{
-		if (this->Parent)
-		{
-			this->Collision->SetPhysicsLinearVelocity(this->Velocity);
-		}
+		this->Collision->SetPhysicsLinearVelocity(this->Velocity);
 	}
 
 public:
