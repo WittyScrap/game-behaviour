@@ -49,22 +49,10 @@ public:
 			FVector orbit = FVector::CrossProduct(FVector::UpVector, direction.GetSafeNormal(0.01f)).GetSafeNormal(0.01f);
 			float velocity = FMath::Sqrt(G_CONST * parent->GetMass() / direction.Size());
 
-			this->Velocity = orbit * velocity + parent->Velocity;
+			this->AddImpulse(orbit * velocity + parent->Velocity);
 		}
 
 		this->Parent = parent;
-	}
-
-	/**
-	 * Performs a physical movement by the velocity vector.
-	 * 
-	 */
-	virtual void PhysicsMove(float DeltaTime) 
-	{
-		FVector location = this->GetActorLocation();
-		location += this->Velocity * DeltaTime;
-
-		this->SetActorLocation(location);
 	}
 	
 	/**
@@ -75,6 +63,17 @@ public:
 	virtual void SetPaused(bool Paused) 
 	{
 		this->bPaused = Paused;
+	}
+
+	/**
+	 * Adds an impulse to this orbital body.
+	 * Impulses ignore mass.
+	 * 
+	 */
+	UFUNCTION(BlueprintCallable)
+	virtual void AddImpulse(FVector impulse)
+	{
+		this->Velocity += impulse;
 	}
 
 public:

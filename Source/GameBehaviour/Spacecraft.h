@@ -29,7 +29,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void AddForce(const FVector& force)
 	{
-		this->Velocity += force / this->Mass;
+		this->Collision->AddForce(force, " ", false);
 	}
 
 	/**
@@ -71,15 +71,6 @@ public:
 	void OnInputSet(FRotator throttling);
 
 	/**
-	 * Performs a physical movement by the velocity vector.
-	 * 
-	 */
-	virtual void PhysicsMove(float DeltaTime) override
-	{
-		this->Collision->SetPhysicsLinearVelocity(this->Velocity);
-	}
-
-	/**
 	 * Pauses or resumes the simulation for this solar system.
 	 * 
 	 */
@@ -87,6 +78,17 @@ public:
 	{
 		Super::SetPaused(Paused);
 		this->Collision->SetSimulatePhysics(!Paused);
+	}
+
+	/**
+	 * Adds an impulse to this orbital body.
+	 * Impulses ignore mass.
+	 * 
+	 */
+	virtual void AddImpulse(FVector impulse) override
+	{
+		Super::AddImpulse(impulse);
+		this->Collision->AddImpulse(impulse, " ", true);
 	}
 
 public:

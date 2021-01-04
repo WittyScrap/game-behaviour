@@ -55,6 +55,11 @@ void APlanet::Tick(float DeltaTime)
 		this->DynamicAtmosphere->SetVectorParameterValue("Light Direction", lightDir);
 		this->DynamicPlanet->SetVectorParameterValue("Light Direction", lightDir);
 	}
+
+	FVector location = this->GetActorLocation();
+	location += this->Velocity * DeltaTime;
+
+	this->SetActorLocation(location);
 }
 
 // Updates shader data 

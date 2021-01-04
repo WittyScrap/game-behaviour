@@ -35,7 +35,7 @@ void AOrbitalBody::Tick(float DeltaTime)
 		this->GetActorLocation() + this->Velocity,
 		FColor(0, 0, 255, 255),
 		false,
-		0, 1, 0
+		0, 2, 0
 	);
 
 	if (this->Parent && this->Parent != this)
@@ -51,11 +51,9 @@ void AOrbitalBody::Tick(float DeltaTime)
 			this->GetActorLocation() + acceleration,
 			FColor(255, 0, 0, 255),
 			false,
-			0, 2, 0
+			0, 3, 0
 		);
 
-		this->Velocity += acceleration * DeltaTime;
+		this->AddImpulse(acceleration * DeltaTime);
 	}
-
-	this->PhysicsMove(DeltaTime);
 }
