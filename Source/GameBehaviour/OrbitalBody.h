@@ -72,7 +72,7 @@ public:
 	 * 
 	 */
 	UFUNCTION(BlueprintCallable)
-	void SetPaused(bool Paused) 
+	virtual void SetPaused(bool Paused) 
 	{
 		this->bPaused = Paused;
 	}

@@ -79,6 +79,16 @@ public:
 		this->Collision->SetPhysicsLinearVelocity(this->Velocity);
 	}
 
+	/**
+	 * Pauses or resumes the simulation for this solar system.
+	 * 
+	 */
+	virtual void SetPaused(bool Paused) override
+	{
+		Super::SetPaused(Paused);
+		this->Collision->SetSimulatePhysics(!Paused);
+	}
+
 public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Spacecraft|Properties")
 	FString 					CraftName = "Planet";
