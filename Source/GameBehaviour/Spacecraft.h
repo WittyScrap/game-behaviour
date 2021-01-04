@@ -9,7 +9,6 @@
 
 #include "Spacecraft.generated.h"
 
-// Something's fishy with the mass here
 UCLASS()
 class GAMEBEHAVIOUR_API ASpacecraft : public AOrbitalBody
 {
@@ -20,6 +19,15 @@ public:
 	ASpacecraft();
 
 public:
+	/**
+	 * Returns the mass of this spacecraft.
+	 * 
+	 */
+	virtual float GetMass() override
+	{
+		return this->Mass;
+	}
+
 	/**
 	 * Adds a force to this spacecraft scaled by the spacecraft's
 	 * mass.
@@ -78,19 +86,20 @@ public:
 	{
 		if (this->Parent)
 		{
+			this->Collision->SetMassOverrideInKg(" ", this->Mass, true);
 			this->Collision->SetPhysicsLinearVelocity(this->Velocity + this->Parent->Velocity);
 		}
 	}
 
 public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Spacecraft|Properties")
-	FString 					CraftName = "Planet";
+	FString 			CraftName = "Planet";
 	
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Spacecraft|Properties")
-	float						Mass = 100.0f;
+	float				Mass = 100.0f;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Components")
-	UCapsuleComponent*			Collision;
+	UCapsuleComponent*	Collision;
 
 
 };

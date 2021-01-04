@@ -14,31 +14,6 @@
 
 #include "Planet.generated.h"
 
-constexpr float __UnitsOfMeasure[8] = 
-{
-	0.00001,
-	0.0001,
-	0.001,
-	0.01,
-	0.1,
-	1,
-	1000,
-	1000000
-};
-
-UENUM(BlueprintType)
-enum class EMeasurementUnit : uint8
-{
-	Centimetre				UMETA(DisplayName = "Centimetre (cm)"),
-	Decimetre				UMETA(DisplayName = "Decimetre (dm)"),
-	Metre					UMETA(DisplayName = "Metre (m)"),
-	Dekametre				UMETA(DisplayName = "Dekametre (dam)"),
-	Hectometre				UMETA(DisplayName = "Hectometre (hm)"),
-	Kilometre				UMETA(DisplayName = "Kilometre (km)"),
-	Megametre				UMETA(DisplayName = "Megametre (Mm)"),
-	Gigametre				UMETA(DisplayName = "Gigametre (Gm)")
-};
-
 UCLASS()
 class GAMEBEHAVIOUR_API APlanet : public AOrbitalBody
 {
@@ -67,7 +42,7 @@ public:
 	 */
 	virtual float GetMass() override
 	{
-		float radius = this->Radius * __UnitsOfMeasure[(int)this->UnitOfMeasure];
+		float radius = this->GetUnitsRadius();
 		return (this->Gravity * radius * radius) / G_CONST;
 	}
 
@@ -79,33 +54,10 @@ public:
 	UFUNCTION(BlueprintPure)
 	float GetUnitsRadius()
 	{
-		return this->Radius * __UnitsOfMeasure[(int)this->UnitOfMeasure] * 100;
+		return ScaledValue(this->Radius);
 	}
 
-	/**
-	 * Returns the multiplier value for a given measurement unit.
-	 * 
-	 * @param unit The measurement unit to retrieve a measure multiplier for.
-	 * @return A multiplier for the given measure. For example, Metres will return 100.
-	 */
-	UFUNCTION(BlueprintPure)
-	static float GetUnitOfMeasurement(EMeasurementUnit unit)
-	{
-		return __UnitsOfMeasure[(int)unit];
-	}
-
-	/**
-	 * Returns the multiplier value for a given measurement unit.
-	 * 
-	 * @param unit The measurement unit to retrieve a measure multiplier for.
-	 * @return A multiplier for the given measure. For example, Metres will return 100.
-	 */
-	template<typename T>
-	static T GetScaledUnit(T value, EMeasurementUnit unit)
-	{
-		return value * __UnitsOfMeasure[(int)unit];
-	}
-	
+public:
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = Components)
 	USceneComponent*			Root;
 
@@ -125,16 +77,10 @@ public:
 	UMaterialInstance* 			PlanetMaterial;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Properties")
-	float 						RotationSpeed = 1.0f;
-
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Properties")
 	float 						PlanetScale = 0.9f;
 	
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Properties")
 	float 						Radius = 1.f;
-	
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Properties")
-	EMeasurementUnit			UnitOfMeasure = EMeasurementUnit::Metre;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Properties")
 	FString 					PlanetName = "Planet";

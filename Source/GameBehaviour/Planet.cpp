@@ -29,7 +29,7 @@ void APlanet::BeginPlay()
 {
 	Super::BeginPlay();
 
-	float radius = this->Radius * __UnitsOfMeasure[(int)this->UnitOfMeasure];
+	float radius = ScaledValue(this->Radius);
 	this->SetActorScale3D({ radius, radius, radius });
 
 	UWorld* world = GetWorld();
