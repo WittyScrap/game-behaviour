@@ -13,6 +13,11 @@
 
 #include "SolarSystem.generated.h"
 
+
+// THIS CLASS IS NO LONGER IN USE.
+// USE PlayerSystem!!
+
+
 USTRUCT(BlueprintType)
 struct FPlanetData
 {
@@ -66,7 +71,7 @@ public:
 		int len = this->Planets.Num();
 		for (int i = 0; i < len; i += 1) 
 		{
-			this->Planets[i]->Pause();
+			this->Planets[i]->SetPaused(true);
 		}
 	}
 
@@ -80,7 +85,7 @@ public:
 		int len = this->Planets.Num();
 		for (int i = 0; i < len; i += 1) 
 		{
-			this->Planets[i]->Unpause();
+			this->Planets[i]->SetPaused(false);
 		}
 	}
 

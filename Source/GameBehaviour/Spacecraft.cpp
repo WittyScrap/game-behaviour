@@ -2,6 +2,7 @@
 
 
 #include "Spacecraft.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 ASpacecraft::ASpacecraft()
@@ -9,39 +10,47 @@ ASpacecraft::ASpacecraft()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	this->Collision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Collision"));
+	this->SetRootComponent(this->Collision);
+	this->Collision->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	this->Collision->SetSimulatePhysics(true);
 }
 
-// Called when the game starts or when spawned
-void ASpacecraft::BeginPlay()
+/**
+ * This is called every frame.
+ * 
+ */
+void ASpacecraft::Tick(float DeltaSeconds)
 {
-	Super::BeginPlay();
-}
-
-// Called every frame
-void ASpacecraft::Tick(float DeltaTime)
-<%
-	Super::Tick(DeltaTime);
+	Super::Tick(DeltaSeconds);
 	
-	// Apply gravity
-	for (int i = 0; i < this->Planets.Num(); ++i)
+	if (this->Parent && this->Collision->IsSimulatingPhysics())
 	{
-		APlanet* planet = this->Planets[i];
+		FVector dirToPlanet;
+		float dst2;
+		float soi2;
 
-		float sqrDst = (planet->GetActorLocation() - this->GetActorLocation()).SizeSquared();
-		FVector forceDir = (planet->GetActorLocation() - this->GetActorLocation()).GetSafeNormal(0.01f);
-		FVector acceleration = forceDir * G_CONST * planet->GetMass() / sqrDst;
+		dirToPlanet = this->GetActorLocation() - this->Parent->GetActorLocation();
+		dst2 = dirToPlanet.SizeSquared();
+		soi2 = this->Parent->GetSphereOfInfluence();
+		soi2 *= soi2;
 
-		this->Velocity += acceleration * DeltaTime;
+		if (this->Parent->Parent != this->Parent && dst2 > soi2)
+		{
+			this->Parent = this->Parent->Parent;
+		}
+		
+		for(int i = 0; this->Parent->Parent == this->Parent && i < this->SolarSystem.Num(); i += 1)
+		{
+			dirToPlanet = this->GetActorLocation() - this->SolarSystem[i]->GetActorLocation();
+			dst2 = dirToPlanet.SizeSquared();
+			soi2 = this->SolarSystem[i]->GetSphereOfInfluence();
+			soi2 *= soi2;
+
+			if (dst2 < soi2)
+			{
+				this->Parent = this->SolarSystem[i];
+			}
+		}
 	}
-
-	// Move
-	this->AddActorWorldOffset(this->Velocity * DeltaTime);
-%>
-
-// Called to bind functionality to input
-void ASpacecraft::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
-

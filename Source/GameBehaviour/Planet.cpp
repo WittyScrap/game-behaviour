@@ -3,6 +3,7 @@
 #include "Kismet/KismetRenderingLibrary.h"
 #include "Engine.h"
 #include "Planet.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 APlanet::APlanet()
@@ -29,7 +30,7 @@ void APlanet::BeginPlay()
 {
 	Super::BeginPlay();
 
-	float radius = this->Radius * __UnitsOfMeasure[(int)this->UnitOfMeasure];
+	float radius = this->Radius / 100;
 	this->SetActorScale3D({ radius, radius, radius });
 
 	UWorld* world = GetWorld();
@@ -48,11 +49,6 @@ void APlanet::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (this->bPaused)
-	{
-		return;
-	}
-
 	if (this->Sun)
 	{
 		FVector lightDir = this->Sun->GetActorLocation() - this->GetActorLocation();
@@ -61,23 +57,10 @@ void APlanet::Tick(float DeltaTime)
 		this->DynamicPlanet->SetVectorParameterValue("Light Direction", lightDir);
 	}
 
-	FRotator rot(0, this->RotationSpeed * DeltaTime, 0);
-	this->AddActorLocalRotation(rot, false, NULL, ETeleportType::None);
+	FVector location = this->GetActorLocation();
+	location += this->Velocity * DeltaTime;
 
-	if (this->Parent != this)
-	{
-		// Apply gravity
-		float sqrDst = (this->Parent->GetActorLocation() - this->GetActorLocation()).SizeSquared();
-		FVector forceDir = (this->Parent->GetActorLocation() - this->GetActorLocation()).GetSafeNormal(0.01f);
-		FVector acceleration = forceDir * G_CONST * this->Parent->GetMass() / sqrDst;
-
-		this->Velocity += acceleration * DeltaTime;
-		
-		FVector location = this->GetActorLocation();
-		location += (this->Velocity + this->Parent->Velocity) * DeltaTime;
-
-		this->SetActorLocation(location);
-	}
+	this->SetActorLocation(location);
 }
 
 // Updates shader data 

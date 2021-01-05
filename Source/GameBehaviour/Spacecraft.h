@@ -3,13 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Pawn.h"
+#include "OrbitalBody.h"
+#include "Components/CapsuleComponent.h"
 #include "Planet.h"
 
 #include "Spacecraft.generated.h"
 
+// Something's fishy with the mass here
 UCLASS()
-class GAMEBEHAVIOUR_API ASpacecraft : public APawn
+class GAMEBEHAVIOUR_API ASpacecraft : public AOrbitalBody
 {
 	GENERATED_BODY()
 
@@ -17,33 +19,7 @@ public:
 	// Sets default values for this pawn's properties
 	ASpacecraft();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	
-	/**
-	 * Sets this body in orbit around the given parent body and sets
-	 * itself as its child.
-	 * 
-	 * @param parent The body to orbit
-	 */
-	UFUNCTION(BlueprintCallable)
-	void Orbit(APlanet* parent)
-	{
-		FVector direction = parent->GetActorLocation() - this->GetActorLocation();
-		float velocity = FMath::Sqrt(G_CONST * parent->GetMass() / direction.Size());
-		FVector orbit = FVector::CrossProduct(FVector::UpVector, direction.GetSafeNormal(0.01f));
-
-		this->Velocity = orbit * velocity + parent->Velocity;
-	}
-
+public:
 	/**
 	 * Adds a force to this spacecraft scaled by the spacecraft's
 	 * mass.
@@ -53,7 +29,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void AddForce(const FVector& force)
 	{
-		this->Velocity += force / this->Mass;
+		this->Collision->AddForce(force, " ", false);
 	}
 
 	/**
@@ -87,6 +63,12 @@ public:
 	void OnThrottleDirectionSet(float throttling);
 	
 	/**
+	 * This is called every frame.
+	 * 
+	 */
+	void Tick(float DeltaSeconds) override;
+
+	/**
 	 * Sets whether or not the throttle is being manipulated.
 	 * 
 	 * @param throttling Whether or not the throttle is changing.
@@ -94,8 +76,29 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnInputSet(FRotator throttling);
 
-private:
-	FVector						PreviousParentLocation;
+	/**
+	 * Pauses or resumes the simulation for this solar system.
+	 * 
+	 */
+	virtual void SetPaused(bool Paused) override
+	{
+		Super::SetPaused(Paused);
+		this->Collision->SetSimulatePhysics(!Paused);
+	}
+
+	/**
+	 * Adds an impulse to this orbital body.
+	 * Impulses ignore mass.
+	 * 
+	 */
+	virtual void AddImpulse(FVector impulse) override
+	{
+		if (this->Collision->IsSimulatingPhysics())
+		{
+			this->Velocity += impulse;
+			this->Collision->AddImpulse(impulse, " ", true);
+		}
+	}
 
 public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Spacecraft|Properties")
@@ -104,11 +107,10 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Spacecraft|Properties")
 	float						Mass = 100.0f;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Spacecraft|Physics")
-	FVector 					Velocity = { 0, 0, 0 };
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Components")
+	UCapsuleComponent*			Collision;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Spacecraft|Physics")
-	TArray<APlanet*>			Planets;
-
+	TArray<APlanet*>			SolarSystem;
 
 };
