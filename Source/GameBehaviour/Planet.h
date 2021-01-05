@@ -57,6 +57,17 @@ public:
 		return this->Radius;
 	}
 
+	/**
+	 * Returns the radius of this planet in world units.
+	 * 
+	 * @return This planet's radius.
+	 */
+	UFUNCTION(BlueprintPure)
+	float GetUnitsPlanetRadius()
+	{
+		return this->Radius * this->PlanetScale;
+	}
+
 public:
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = Components)
 	USceneComponent*			Root;
