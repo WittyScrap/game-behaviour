@@ -110,5 +110,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Components")
 	UCapsuleComponent*			Collision;
 
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Spacecraft|Physics")
+	TArray<APlanet*>			SolarSystem;
 
 };

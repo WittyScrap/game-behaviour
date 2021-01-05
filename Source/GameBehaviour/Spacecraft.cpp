@@ -26,36 +26,31 @@ void ASpacecraft::Tick(float DeltaSeconds)
 	
 	if (this->Parent && this->Collision->IsSimulatingPhysics())
 	{
-		FVector velocityDir = this->Velocity - this->Parent->Velocity;
-		
-		DrawDebugLine(
-			GetWorld(),
-			this->GetActorLocation(),
-			this->GetActorLocation() + velocityDir,
-			FColor(0, 0, 255, 255),
-			false,
-			0, 2, 0.01f
-		);
+		FVector dirToPlanet;
+		float dst2;
+		float soi2;
 
-		FVector dirToPlanet = this->Parent->GetActorLocation();
-		
-		DrawDebugLine(
-			GetWorld(),
-			this->GetActorLocation(),
-			dirToPlanet,
-			FColor(255, 0, 0, 255),
-			false,
-			0, 2, 0.01f
-		);
+		dirToPlanet = this->GetActorLocation() - this->Parent->GetActorLocation();
+		dst2 = dirToPlanet.SizeSquared();
+		soi2 = this->Parent->GetSphereOfInfluence();
 
-		dirToPlanet = this->GetActorLocation() - dirToPlanet;
-		float dst = dirToPlanet.Size();
+		soi2 *= soi2;
 
-		GEngine->AddOnScreenDebugMessage(-1, 1.5f, FColor::Yellow, FString::Printf(TEXT("Distance: %f, SOI: %f"), dst, this->Parent->GetSphereOfInfluence()));
-
-		if (this->Parent->Parent && dst > this->Parent->GetSphereOfInfluence())
+		if (this->Parent->Parent && dst2 > soi2)
 		{
 			this->Parent = this->Parent->Parent;
+		}
+		
+		for(int i = 0; !this->Parent->Parent && i < this->SolarSystem.Num(); i += 1)
+		{
+			dirToPlanet = this->GetActorLocation() - this->SolarSystem[i]->GetActorLocation();
+			dst2 = dirToPlanet.SizeSquared();
+			soi2 = this->SolarSystem[i]->GetSphereOfInfluence();
+
+			if (dst2 < soi2)
+			{
+				this->Parent = this->SolarSystem[i];
+			}
 		}
 	}
 }
