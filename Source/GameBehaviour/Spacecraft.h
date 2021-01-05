@@ -87,8 +87,11 @@ public:
 	 */
 	virtual void AddImpulse(FVector impulse) override
 	{
-		this->Velocity += impulse;
-		this->Collision->AddImpulse(impulse, " ", true);
+		if (this->Collision->IsSimulatingPhysics())
+		{
+			this->Velocity += impulse;
+			this->Collision->AddImpulse(impulse, " ", true);
+		}
 	}
 
 public:

@@ -42,7 +42,7 @@ public:
 	 */
 	virtual float GetMass() override
 	{
-		float radius = this->Radius;
+		float radius = this->Radius * this->PlanetScale;
 		return this->Gravity * (radius * radius) / G_CONST;
 	}
 
