@@ -2,7 +2,6 @@
 
 
 #include "OrbitalBody.h"
-#include "DrawDebugHelpers.h"
 
 // Sets default values
 AOrbitalBody::AOrbitalBody()
@@ -28,15 +27,6 @@ void AOrbitalBody::Tick(float DeltaTime)
 	{
 		return;
 	}
-	
-	DrawDebugLine(
-		GetWorld(),
-		this->GetActorLocation(),
-		this->GetActorLocation() + this->Velocity,
-		FColor(0, 0, 255, 255),
-		false,
-		0, 2, 0
-	);
 
 	if (this->Parent && this->Parent != this)
 	{
@@ -44,15 +34,6 @@ void AOrbitalBody::Tick(float DeltaTime)
 		float sqrDst = (this->Parent->GetActorLocation() - this->GetActorLocation()).SizeSquared();
 		FVector forceDir = (this->Parent->GetActorLocation() - this->GetActorLocation()).GetSafeNormal(0.01f);
 		FVector acceleration = forceDir * G_CONST * this->Parent->GetMass() / sqrDst;
-
-		DrawDebugLine(
-			GetWorld(),
-			this->GetActorLocation(),
-			this->GetActorLocation() + acceleration,
-			FColor(255, 0, 0, 255),
-			false,
-			0, 3, 0
-		);
 
 		this->AddImpulse(acceleration * DeltaTime);
 	}

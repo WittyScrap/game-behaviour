@@ -63,6 +63,12 @@ public:
 	void OnThrottleDirectionSet(float throttling);
 	
 	/**
+	 * This is called every frame.
+	 * 
+	 */
+	void Tick(float DeltaSeconds) override;
+
+	/**
 	 * Sets whether or not the throttle is being manipulated.
 	 * 
 	 * @param throttling Whether or not the throttle is changing.

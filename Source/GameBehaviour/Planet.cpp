@@ -3,6 +3,7 @@
 #include "Kismet/KismetRenderingLibrary.h"
 #include "Engine.h"
 #include "Planet.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 APlanet::APlanet()

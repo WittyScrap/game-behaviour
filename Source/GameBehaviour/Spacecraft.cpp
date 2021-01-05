@@ -2,6 +2,7 @@
 
 
 #include "Spacecraft.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 ASpacecraft::ASpacecraft()
@@ -13,4 +14,38 @@ ASpacecraft::ASpacecraft()
 	this->SetRootComponent(this->Collision);
 	this->Collision->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	this->Collision->SetSimulatePhysics(true);
+}
+
+/**
+ * This is called every frame.
+ * 
+ */
+void ASpacecraft::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	
+	if (this->Parent && this->Collision->IsSimulatingPhysics())
+	{
+		FVector velocityDir = this->Velocity - this->Parent->Velocity;
+		
+		DrawDebugLine(
+			GetWorld(),
+			this->GetActorLocation(),
+			this->GetActorLocation() + velocityDir,
+			FColor(0, 0, 255, 255),
+			false,
+			0, 2, 0.01f
+		);
+
+		FVector dirToPlanet = this->Parent->GetActorLocation();
+		
+		DrawDebugLine(
+			GetWorld(),
+			this->GetActorLocation(),
+			dirToPlanet,
+			FColor(255, 0, 0, 255),
+			false,
+			0, 2, 0.01f
+		);
+	}
 }
