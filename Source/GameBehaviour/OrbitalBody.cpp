@@ -18,6 +18,29 @@ void AOrbitalBody::BeginPlay()
 	
 }
 
+/**
+ * Calculates the sphere of influence (SOI)
+ * of this body.
+ * 
+ */
+float AOrbitalBody::GetSphereOfInfluence()
+{
+	if (this->Parent)
+	{
+		// Approximate length of the semi-major axis.
+		// Since this will realistically only be used for planets, and all planets in the
+		// game follow circular orbits, the semi-major axis matches the distance from the planet
+		// to its parent (most likely the sun).
+		float a = (this->GetActorLocation() - this->Parent->GetActorLocation()).Size();
+		float m = this->GetMass();
+		float M = this->Parent->GetMass();
+
+		return a * FMath::Pow(m / M, 2.f / 5.f);
+	}
+
+	return 0;
+}
+
 // Called every frame
 void AOrbitalBody::Tick(float DeltaTime)
 {

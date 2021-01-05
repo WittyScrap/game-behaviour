@@ -33,6 +33,13 @@ public:
 	virtual float GetMass() {
 		return 0;
 	}
+
+	/**
+	 * Calculates the sphere of influence (SOI)
+	 * of this body.
+	 * 
+	 */
+	float GetSphereOfInfluence();
 	
 	/**
 	 * Sets this body in orbit around the given parent body and sets
