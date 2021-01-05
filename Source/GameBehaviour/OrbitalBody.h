@@ -83,7 +83,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Orbital Body|Physics")
 	bool 			bFixed = false;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Orbital Body|Physics", meta = (EditCondition = "!bFixed"))
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Orbital Body|Physics", meta = (EditCondition = "!bFixed"))
 	AOrbitalBody*	Parent;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Orbital Body|Runtime data (read-only)")

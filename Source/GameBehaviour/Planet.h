@@ -59,6 +59,7 @@ public:
 
 	/**
 	 * Returns the radius of this planet in world units.
+	 * This value excludes the atmosphere's height.
 	 * 
 	 * @return This planet's radius.
 	 */
