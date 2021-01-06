@@ -60,6 +60,7 @@ void APlanet::Tick(float DeltaTime)
 	FVector location = this->GetActorLocation();
 	location += this->Velocity * DeltaTime;
 
+	this->AddActorLocalRotation(FRotator(0, this->RotationSpeed * DeltaTime, 0), false, NULL, ETeleportType::None);
 	this->SetActorLocation(location);
 }
 
