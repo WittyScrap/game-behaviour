@@ -100,6 +100,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Properties")
 	FString 					PlanetName = "Planet";
 
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Properties")
+	float						PlanetHealth = 100;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Planet|Physics")
 	float 						Gravity = 9.807f;
 
@@ -114,5 +117,7 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Planet|Graphics")
 	AOrbitalBody*				Sun;
+
+
 
 };
