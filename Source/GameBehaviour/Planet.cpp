@@ -22,7 +22,8 @@ APlanet::APlanet()
 	
 	this->PreviewCamera = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("Preview Camera"));
 	this->PreviewCamera->SetupAttachment(this->Planet);
-	this->PreviewCamera->SetRelativeLocation({ -400.f, 0, 0 });
+	this->PreviewCamera->SetRelativeLocation({ -200.f, 0, 0 });
+	this->PreviewCamera->CaptureSource = ESceneCaptureSource::SCS_FinalColorLDR;
 }
 
 // Called when the game starts or when spawned
@@ -115,4 +116,12 @@ void APlanet::Burn(float burnTime)
 {
 	this->BurnTimer = 1 - burnTime;
 	this->bBurned = true;
+
+	TArray<AActor*> children;
+	this->GetAllChildActors(children, true);
+
+	for (int i = 0; i < children.Num(); i += 1)
+	{
+		GetWorld()->DestroyActor(children[i]);
+	}
 }
