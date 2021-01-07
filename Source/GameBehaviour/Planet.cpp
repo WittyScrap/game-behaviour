@@ -57,11 +57,26 @@ void APlanet::Tick(float DeltaTime)
 		this->DynamicPlanet->SetVectorParameterValue("Light Direction", lightDir);
 	}
 
-	FVector location = this->GetActorLocation();
-	location += this->Velocity * DeltaTime;
+	if (!this->bBurned)
+	{
+		FVector location = this->GetActorLocation();
+		location += this->Velocity * DeltaTime;
 
-	this->AddActorLocalRotation(FRotator(0, this->RotationSpeed * DeltaTime, 0), false, NULL, ETeleportType::None);
-	this->SetActorLocation(location);
+		this->AddActorLocalRotation(FRotator(0, this->RotationSpeed * DeltaTime, 0), false, NULL, ETeleportType::None);
+		this->SetActorLocation(location);
+	}
+	else
+	{
+		this->BurnTimer += DeltaTime;
+		float heat = FMath::Max(this->BurnTimer, 0.f);
+		this->DynamicAtmosphere->SetScalarParameterValue("Heat", heat);
+		this->DynamicPlanet->SetScalarParameterValue("Heat", heat);
+
+		if (this->BurnTimer > 1.f)
+		{
+			GetWorld()->DestroyActor(this);
+		}
+	}
 }
 
 // Updates shader data 
@@ -73,4 +88,31 @@ void APlanet::OnConstruction(const FTransform& transform)
 	this->Planet->SetMaterial(0, this->PlanetMaterial);
 
 	this->Planet->SetRelativeScale3D({ this->PlanetScale, this->PlanetScale, this->PlanetScale });
+}
+
+/**
+ * Event fired when a rocket hits this planet.
+ * Slows down the planet's orbit.
+ * 
+ * @param velocity The magnitude of the rocket's velocity vector on impact.
+ */
+void APlanet::OnHit(float velocity)
+{
+	velocity /= this->Strength;
+	float deorbitValue = velocity / (1 + FMath::Abs(velocity));
+	deorbitValue = 1 - deorbitValue;
+	this->Velocity *= deorbitValue;
+}
+
+/**
+ * Event fired when this planet gets too close to the sun.
+ * Destroys the planet after the indicated time.
+ * 
+ * @param burnTime The time it takes for the planet to burn.
+ * 
+ */
+void APlanet::Burn(float burnTime)
+{
+	this->BurnTimer = 1 - burnTime;
+	this->bBurned = true;
 }

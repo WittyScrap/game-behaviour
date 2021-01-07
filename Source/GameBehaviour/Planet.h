@@ -69,6 +69,28 @@ public:
 		return this->Radius * this->PlanetScale;
 	}
 
+	/**
+	 * Event fired when a rocket hits this planet.
+	 * Slows down the planet's orbit.
+	 * 
+	 * @param velocity The magnitude of the rocket's velocity vector on impact.
+	 */
+	UFUNCTION(BlueprintCallable)
+	void OnHit(float speed);
+
+	/**
+	 * Event fired when this planet gets too close to the sun.
+	 * Destroys the planet after the indicated time.
+	 * 
+	 * @param burnTime The time it takes for the planet to burn.
+	 * 
+	 */
+	UFUNCTION(BlueprintCallable)
+	void Burn(float burnTime);
+
+private:
+	float						BurnTimer = 0;
+
 public:
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = Components)
 	USceneComponent*			Root;
@@ -100,9 +122,6 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Properties")
 	FString 					PlanetName = "Planet";
 
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Planet|Properties")
-	float						PlanetHealth = 100;
-
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Planet|Physics")
 	float 						Gravity = 9.807f;
 
@@ -118,6 +137,10 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Planet|Graphics")
 	AOrbitalBody*				Sun;
 
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Planet|Properties", meta = (ClampMin = "0.001"))
+	float 						Strength = 1000;
 
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Planet|Properties")
+	bool 						bBurned;
 
 };
