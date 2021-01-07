@@ -58,22 +58,21 @@ void APlanet::Tick(float DeltaTime)
 		this->DynamicPlanet->SetVectorParameterValue("Light Direction", lightDir);
 	}
 
-	if (!this->bBurned)
-	{
-		FVector location = this->GetActorLocation();
-		location += this->Velocity * DeltaTime;
+	FVector location = this->GetActorLocation();
+	location += this->Velocity * DeltaTime;
 
-		this->AddActorLocalRotation(FRotator(0, this->RotationSpeed * DeltaTime, 0), false, NULL, ETeleportType::None);
-		this->SetActorLocation(location);
-	}
-	else
+	this->AddActorLocalRotation(FRotator(0, this->RotationSpeed * DeltaTime, 0), false, NULL, ETeleportType::None);
+	this->SetActorLocation(location);
+		
+	if (this->bBurned)
 	{
 		this->BurnTimer += DeltaTime;
+		this->DestroyTimer -= DeltaTime;
 		float heat = FMath::Max(this->BurnTimer, 0.f);
 		this->DynamicAtmosphere->SetScalarParameterValue("Heat", heat);
 		this->DynamicPlanet->SetScalarParameterValue("Heat", heat);
 
-		if (this->BurnTimer > 1.f)
+		if (this->DestroyTimer < 0.f)
 		{
 			GetWorld()->DestroyActor(this);
 		}
@@ -115,6 +114,7 @@ void APlanet::OnHit(float velocity)
 void APlanet::Burn(float burnTime)
 {
 	this->BurnTimer = 1 - burnTime;
+	this->DestroyTimer = burnTime * 2;
 	this->bBurned = true;
 
 	TArray<AActor*> children;
@@ -124,4 +124,8 @@ void APlanet::Burn(float burnTime)
 	{
 		GetWorld()->DestroyActor(children[i]);
 	}
+
+	// Sudden slowdown to create a "planet slowly falling
+	// in the plasma" effect.
+	this->Velocity *= 0;
 }
