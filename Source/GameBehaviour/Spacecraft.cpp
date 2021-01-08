@@ -42,14 +42,17 @@ void ASpacecraft::Tick(float DeltaSeconds)
 		
 		for(int i = 0; this->Parent->Parent == this->Parent && i < this->SolarSystem.Num(); i += 1)
 		{
-			dirToPlanet = this->GetActorLocation() - this->SolarSystem[i]->GetActorLocation();
-			dst2 = dirToPlanet.SizeSquared();
-			soi2 = this->SolarSystem[i]->GetSphereOfInfluence();
-			soi2 *= soi2;
-
-			if (dst2 < soi2)
+			if (this->SolarSystem[i])
 			{
-				this->Parent = this->SolarSystem[i];
+				dirToPlanet = this->GetActorLocation() - this->SolarSystem[i]->GetActorLocation();
+				dst2 = dirToPlanet.SizeSquared();
+				soi2 = this->SolarSystem[i]->GetSphereOfInfluence();
+				soi2 *= soi2;
+
+				if (dst2 < soi2)
+				{
+					this->Parent = this->SolarSystem[i];
+				}
 			}
 		}
 	}

@@ -90,6 +90,7 @@ public:
 
 private:
 	float						BurnTimer = 0;
+	float						DestroyTimer = 0;
 
 public:
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = Components)
